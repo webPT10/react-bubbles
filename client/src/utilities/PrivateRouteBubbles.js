@@ -5,7 +5,7 @@ const PrivateRouteBubbles = ({ component: Component, ...rest }) => {
   return (
     <>
       <Route
-        {...route}
+        {...rest}
         render={props =>
           localStorage.getItem("token") ? (
             <Component {...props} />
