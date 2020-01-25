@@ -22,7 +22,7 @@ const Login = ({history}) => {
       .then(response => {
         console.log(response);
         localStorage.setItem("token", response.data.payload);
-        history.pushState("/bubbles");
+        history.push("/bubbles");
       })
       .catch(error => console.log(error));
   };
