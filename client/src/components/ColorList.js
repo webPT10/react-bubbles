@@ -5,13 +5,13 @@ const initialColor = {
   color: "",
   code: { hex: "" }
 };
-                    // []  , response.data
+// []  , response.data
 const ColorList = ({ colors, updateColors }) => {
   console.log("Colors array", colors);
 
   const [editing, setEditing] = useState(false);
-  const [colorToEdit, setColorToEdit] = useState(initialColor);
-  console.log(colorToEdit);
+  const [colorToEdit, setColorToEdit] = useState(null);
+  // console.log(colorToEdit);
 
   const editColor = color => {
     setEditing(true);
@@ -23,12 +23,24 @@ const ColorList = ({ colors, updateColors }) => {
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
-    const id = colorToEdit.id; // how does colorToEdit have an id on it???? 
-    console.log(colorToEdit);
+
+    const id = colorToEdit.id; // how does colorToEdit have an id on it????
+    console.log({ colorToEdit });
 
     axiosWithAuth()
       .put(`http://localhost:5000/api/colors/${id}`, colorToEdit)
-      .then(response => updateColors([...colors, response.data]))
+      .then(response => {
+        const updatedColor = response.data;
+        console.log({ updatedColor });
+        const newColors = colors.map(currentColor => {
+          console.log(currentColor);
+          if (updatedColor.id === currentColor.id) {
+            return updatedColor;
+          }
+          return currentColor;
+        });
+        updateColors(newColors);
+      })
       .catch(error => console.log(error));
 
     setEditing(false);
@@ -54,7 +66,7 @@ const ColorList = ({ colors, updateColors }) => {
       <p>colors</p>
       <ul>
         {colors.map(color => (
-          <li key={color.color} onClick={() => editColor(color)}>
+          <li key={color.id} onClick={() => editColor(color)}>
             <span>
               <span
                 className="delete"
